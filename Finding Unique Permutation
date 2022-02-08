@@ -1,0 +1,49 @@
+class Solution {
+public:
+    void swap(int* a,int* b){
+        int t = *a;
+        *a = *b;
+        *b = t;
+    }
+    
+    void findNextPermutation(vector<int>& nums){
+        int i = nums.size()-1; // 1 1 2
+        while(i>0 && nums[i-1]>=nums[i]){
+            i--;
+        } // 3 1 1
+        int startIndex,endIndex = nums.size()-1;
+        if(i==0){startIndex = 0;}
+        else{
+            startIndex = i;
+            int minnum = nums[i-1];
+            int firstElementIndex = i-1; // 1 2 1
+            int stopperVal = INT_MAX;
+            int targetIndex;
+            while(i<nums.size()){
+                if(nums[i]>minnum && nums[i]<=stopperVal){
+                    stopperVal = nums[i];
+                    targetIndex = i;
+                }
+                i++;
+            }
+            swap(&nums[firstElementIndex],&nums[targetIndex]);
+        }
+        while(startIndex<endIndex){
+            swap(&nums[startIndex],&nums[endIndex]);
+            startIndex++;endIndex--;
+        }
+    }
+    
+    void fillUniquePermutation(vector<int>&nums, vector<vector<int>>& V){// 1 1 2
+        while(find(V.begin(),V.end(),nums)==V.end()){
+            V.push_back(nums);// 1 2
+            findNextPermutation(nums); // 
+        }
+    }
+    vector<vector<int>> permuteUnique(vector<int>& nums) { // 1 1 2
+        vector<vector<int>> V;
+        if(nums.size()>1){fillUniquePermutation(nums,V);}
+        else{V.push_back(nums);}
+        return V;
+    }
+};
